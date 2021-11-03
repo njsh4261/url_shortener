@@ -2,7 +2,7 @@ from django.core.checks import messages
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator, URLValidator
 from django.core.exceptions import ValidationError
-from .constants import *
+from .src.constants import *
 
 # Create your models here.
 class ShortenURL(models.Model):

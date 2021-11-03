@@ -1,4 +1,4 @@
-URL_ENC = "url_enc"
+URL_ENC = "url-enc"
 BASE62 = 62
 BASE62_TABLE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 

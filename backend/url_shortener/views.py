@@ -1,36 +1,26 @@
+from django import template
 from django.core.exceptions import ValidationError
-from django.http.response import HttpResponseBadRequest, HttpResponseForbidden, JsonResponse
-from django.shortcuts import render
 from django.http import HttpResponse, HttpRequest
-from django.shortcuts import redirect, get_object_or_404
+from django.http.response import HttpResponseBadRequest, HttpResponseForbidden, JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.template import loader
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import ShortenURL
-from .constants import *
-
-def _encode_base62(id):
-    div_list = []
-    while id > 0:
-        div_list.append(id % BASE62)
-        id //= BASE62
-    return "".join([BASE62_TABLE[i] for i in div_list[::-1]])
-
-def _decode_base62(shorten_url):
-    try:
-        base62_list = [BASE62_TABLE.index(c) for c in shorten_url]
-        id = 0
-        for i in base62_list:
-            id = id * BASE62 + i
-        return id
-    except ValueError:
-        return -1       # 404 error will be raised for a bad URL
+from .src.constants import *
+from .src.base62 import encode_base62, decode_base62
 
 # Create your views here.
 def index(request): # encode_url
-    return HttpResponse("This is an index page.")
+    template = loader.get_template('url_shortener/index.html')
+    context = {}
+    return HttpResponse(template.render(context, request))
+    # return HttpResponse("This is an index page.")
 
+@csrf_exempt
 def get_encoded_url(request):
-    # if request.method != "POST":
-    #     return HttpResponseForbidden()
+    if request.method != "POST":
+        return HttpResponseForbidden()
 
     response_data = {
         "shorten_url": None,
@@ -48,7 +38,7 @@ def get_encoded_url(request):
         else:
             url_record = url_record[0]
         response_data["shorten_url"] = request.build_absolute_uri()[:-len(URL_ENC)] \
-            + _encode_base62(url_record.id)
+            + encode_base62(url_record.id)
         response_data["message"] = "Successfully shortened the URL length!"
     except ValidationError as e:
         if "url" in e.message_dict: # URL is not in vaild form
@@ -64,6 +54,8 @@ def get_encoded_url(request):
     # return HttpResponse("In this page({0}) url will be encoded.".format(request.build_absolute_uri()[:-len(URL_ENC)]))
 
 def get_decoded_url(request, shorten_url):
+    if request.method != "GET":
+        return HttpResponseForbidden()
     return redirect(
-        get_object_or_404(ShortenURL, pk=_decode_base62(shorten_url)).url
+        get_object_or_404(ShortenURL, pk=decode_base62(shorten_url)).url
     )
