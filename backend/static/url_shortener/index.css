@@ -1,0 +1,12 @@
+.content {
+    text-align: center;
+}
+
+.shortener-item {
+    margin-bottom: 10px;
+}
+
+#content-title {
+    font-size: xx-large;
+    font-weight: 700;
+}
