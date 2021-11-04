@@ -7,16 +7,23 @@
         <title>URL Shortener</title>
     </head>
     <body>
-        <div id="content">
-            <div id="content-title">
-                <p> URL Shortener </p>
+        <div class="content">
+            <div id="title" class="shortener-item">
+                <p id="content-title">URL Shortener</p>
             </div>
-            <div id="input">
-                <p> URL Shortener 2 </p>
+            <div id="input" class="shortener-item">
+                <label id="input-label" for="url-input">type URL to shorten: </label>
+                <input id="input-textbox" type="text" name="url-input">
+                <input id="input-button" type="button" value="submit" onclick="postURLEnc()">
             </div>
-            <div id="output">
-                <p> URL Shortener 3 </p>
+            <div id="output" class="shortener-item">
+                <label id="output-label" for="url-output">Here is your shorten URL: </label>
+                <input id="output-textbox" type="text" name="url-output" disabled>
+                <input id="input-button" type="button" value="copy" onclick="copyToClipboard()">
+                <p id="result-msg"></p>
             </div>
         </div>
+        <script type="text/javascript" src="{% static 'url_shortener/index.js' %}"></script>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.js"></script>
     </body>
 </html>

@@ -30,18 +30,29 @@ def get_encoded_url(request):
 
     try:
         # request body should include URL like { "url": "https://www.github.com" }
+        print(request.POST)
         url_fetched = request.POST.get("url")
+
+        # add 'http://' if url does not start with it
+        if not ( url_fetched.startswith("http://") or url_fetched.startswith("https://") ):
+            url_fetched = "http://" + url_fetched
+        
+        # check if the url already exists in DB
         url_record = ShortenURL.objects.filter(url=url_fetched)
         if not url_record:
             url_record = ShortenURL(url=url_fetched)
             url_record.save()
         else:
             url_record = url_record[0]
+        
+        # response 200 ok
         response_data["shorten_url"] = request.build_absolute_uri()[:-len(URL_ENC)] \
             + encode_base62(url_record.id)
-        response_data["message"] = "Successfully shortened the URL length!"
+        response_data["message"] = "Success! You may copy the shorten URL above."
+
     except ValidationError as e:
-        if "url" in e.message_dict: # URL is not in vaild form
+        # URL is not in vaild form
+        if "url" in e.message_dict:
             response_data["message"] = "The URL may be invalid. Try something else."
             status_code = 400
         else:
@@ -51,7 +62,6 @@ def get_encoded_url(request):
     response = JsonResponse(response_data)
     response.status_code = status_code
     return response
-    # return HttpResponse("In this page({0}) url will be encoded.".format(request.build_absolute_uri()[:-len(URL_ENC)]))
 
 def get_decoded_url(request, shorten_url):
     if request.method != "GET":

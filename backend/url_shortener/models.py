@@ -18,9 +18,9 @@ class ShortenURL(models.Model):
         return "({0}, {1})".format(self.id, self.url)
 
     # functions that uses ShortenURL.save() should handle ValidationError
-    def save(self, *args, **kwargs):        # id starts from 1M
+    def save(self, *args, **kwargs):
         self.id = ShortenURL.objects.last().id + 1 \
             if ShortenURL.objects.count() \
-            else 1_000_000
+            else 1_000_000     # id starts from 10M
         self.full_clean()
         super().save(*args, **kwargs)
