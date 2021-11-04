@@ -35,13 +35,19 @@ def get_encoded_url(request):
         # request body should include URL like { "url": "https://www.github.com" }
         print(request.POST)
         url_fetched = request.POST.get("url")
+        if not url_fetched.endswith("/"):
+            url_fetched += "/"
 
-        # add 'http://' if url does not start with it
-        if not ( url_fetched.startswith("http://") or url_fetched.startswith("https://") ):
-            url_fetched = "http://" + url_fetched
-        
-        # check if the url already exists in DB
-        url_record = ShortenURL.objects.filter(url=url_fetched)
+        # add 'https://' or 'http://' if url does not start with them
+        url_record = None
+        if url_fetched.startswith("https://") or url_fetched.startswith("http://"):
+            url_record = ShortenURL.objects.filter(url=url_fetched)
+        else:
+            url_record = ShortenURL.objects.filter(url="https://" + url_fetched)
+            if not url_record:
+                url_record = ShortenURL.objects.filter(url="http://" + url_fetched)   
+
+        # if the url dose not exist in the table, insert new record
         if not url_record:
             url_record = ShortenURL(url=url_fetched)
             url_record.save()

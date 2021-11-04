@@ -22,6 +22,7 @@ function printResult(res, is_success) {
         result_msg.innerHTML = res.message;
     }
     else {
+        document.getElementById("output-textbox").value = "";
         result_msg.style.color = "red";
         result_msg.innerHTML = res.message;
     }
