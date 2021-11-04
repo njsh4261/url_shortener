@@ -25,7 +25,19 @@ python manage.py runserver 8088 --insecure
 ```
 
 # 실행 예시
+![image](https://user-images.githubusercontent.com/54832818/140405733-c6dde13a-d4a4-4035-aa93-8441273f8df4.png)
+* main page(local에서 실행 시 `localhost:8088`) 접속화면
 
+![image](https://user-images.githubusercontent.com/54832818/140405954-458f4ead-9543-4a2f-929c-2c365f4a175c.png)
+* URL을 입력하고 submit 버튼을 누르면 shorten URL이 반환됨
+
+![image](https://user-images.githubusercontent.com/54832818/140406138-e6500e3a-bb27-4a00-a041-d727d2abd4b1.png)
+* 서버에 shorten URL이 존재하는 경우 동일한 shorten URL 반환
+* URL에 http/https 프로토콜을 명시하지 않아도 DB에 URL이 존재하는 경우 동일한 결과를 제공
+    * DB에 존재하지 않는 경우 http로 간주하고 shorten URL 반환
+
+![image](https://user-images.githubusercontent.com/54832818/140406593-11959d58-22db-4307-911c-cacde3590d50.png)
+* URL 형식에 맞지 않는 text 입력 시 error message 반환
 
 # APIs
 - 명시되지 않은 method로 접근 시 (e.g. GET /url-enc) 403 Forbidden 혹은 404 not found 에러가 발생
