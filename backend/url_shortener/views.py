@@ -12,9 +12,12 @@ from .src.base62 import encode_base62, decode_base62
 
 # Create your views here.
 def index(request): # encode_url
-    template = loader.get_template('url_shortener/index.html')
-    context = {}
-    return HttpResponse(template.render(context, request))
+    if request.method != "GET":
+        return HttpResponseForbidden()
+    return HttpResponse(
+        loader.get_template('url_shortener/index.html')
+            .render( {}, request )
+    )
     # return HttpResponse("This is an index page.")
 
 @csrf_exempt

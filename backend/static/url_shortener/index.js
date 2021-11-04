@@ -1,25 +1,21 @@
 // send POST request to server
 function postURLEnc() {
     $.ajax({
-        method: 'POST',
+        type: 'POST',
         url:'http://localhost:8088/url-enc',
-        type: 'json',
         data: {
             'url': document.getElementById("input-textbox").value,
         },
-        success: function(res) {
-            printResult(res, true);
-        },
-        error: function(err) {
-            printResult(err, false);
-        },
+    }).done(function(res) {
+        printResult(res, true);
+    }).fail(function(err) {
+        printResult(err.responseJSON, false);
     });
 }
 
 // print output
 function printResult(res, is_success) {
     let result_msg = document.getElementById("result-msg");
-    console.log(res)
     if(is_success) {
         document.getElementById("output-textbox").value = res.shorten_url;
         result_msg.style.color = "green";
