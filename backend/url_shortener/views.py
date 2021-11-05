@@ -1,27 +1,30 @@
-from django import template
 from django.core.exceptions import ValidationError
-from django.http import HttpResponse, HttpRequest
-from django.http.response import HttpResponseBadRequest, HttpResponseForbidden, JsonResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse
+from django.http.response import HttpResponseForbidden, JsonResponse
+from django.shortcuts import redirect, get_object_or_404
 from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import ShortenURL
-from .src.constants import *
+from .src.constants import URL_ENC
 from .src.base62 import encode_base62, decode_base62
 
-# Create your views here.
 def index(request): # encode_url
+    '''
+    [GET /]
+    '''
     if request.method != "GET":
         return HttpResponseForbidden()
     return HttpResponse(
         loader.get_template('url_shortener/index.html')
             .render( {}, request )
     )
-    # return HttpResponse("This is an index page.")
 
 @csrf_exempt
-def get_encoded_url(request):
+def post_encode_url(request):
+    '''
+    [POST /enc-url]
+    '''
     if request.method != "POST":
         return HttpResponseForbidden()
 
@@ -45,7 +48,7 @@ def get_encoded_url(request):
         else:
             url_record = ShortenURL.objects.filter(url="https://" + url_fetched)
             if not url_record:
-                url_record = ShortenURL.objects.filter(url="http://" + url_fetched)   
+                url_record = ShortenURL.objects.filter(url="http://" + url_fetched)
 
         # if the url dose not exist in the table, insert new record
         if not url_record:
@@ -53,7 +56,7 @@ def get_encoded_url(request):
             url_record.save()
         else:
             url_record = url_record[0]
-        
+
         # response 200 ok
         response_data["shorten_url"] = request.build_absolute_uri()[:-len(URL_ENC)] \
             + encode_base62(url_record.id)
@@ -72,7 +75,10 @@ def get_encoded_url(request):
     response.status_code = status_code
     return response
 
-def get_decoded_url(request, shorten_url):
+def get_decode_url(request, shorten_url):
+    '''
+    [GET /[url_shorten]]
+    '''
     if request.method != "GET":
         return HttpResponseForbidden()
     return redirect(
