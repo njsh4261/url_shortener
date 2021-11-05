@@ -10,9 +10,7 @@ from .src.constants import URL_ENC
 from .src.base62 import encode_base62, decode_base62
 
 def index(request): # encode_url
-    '''
-    [GET /]
-    '''
+    """ [GET /] """
     if request.method != "GET":
         return HttpResponseForbidden()
     return HttpResponse(
@@ -22,9 +20,7 @@ def index(request): # encode_url
 
 @csrf_exempt
 def post_encode_url(request):
-    '''
-    [POST /enc-url]
-    '''
+    """ [POST /enc-url] """
     if request.method != "POST":
         return HttpResponseForbidden()
 
@@ -76,9 +72,7 @@ def post_encode_url(request):
     return response
 
 def get_decode_url(request, shorten_url):
-    '''
-    [GET /[url_shorten]]
-    '''
+    """ [GET /[url_shorten]] """
     if request.method != "GET":
         return HttpResponseForbidden()
     return redirect(

@@ -2,9 +2,7 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 class ShortenURL(models.Model):
-    '''
-    Table that stores the original URL
-    '''
+    """ Table that stores the original URL """
     id = models.BigIntegerField(
         primary_key=True, validators=[
             # maximum value that can be represented by 8 digit base62 string

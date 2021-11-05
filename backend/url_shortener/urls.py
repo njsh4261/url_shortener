@@ -4,7 +4,7 @@ from django.urls import path
 from . import views
 from .src.constants import URL_ENC
 
-app_name = 'url_shortener'
+app_name = "url_shortener"
 urlpatterns = [
     path("", views.index, name="index"),
     path(URL_ENC, views.post_encode_url, name="get_encoded_url"),
