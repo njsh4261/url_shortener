@@ -5,6 +5,7 @@ URL을 입력하면 단축된 URL을 제공, 단축된 URL을 웹 브라우저�
 - backend: Python3.6, Django
 - frontend: HTML, Javascript, CSS, JQuery
     - 별도의 서버 구현 없이 Django 서버에서 static page로 제공
+- database: SQLite (Django 기본 내장)
 
 # 실행 환경 준비
 * Linux 또는 Windows 10의 WSL 사용 기준
